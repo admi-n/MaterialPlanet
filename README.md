@@ -38,11 +38,11 @@
 
 传统以中间人作为担保的系统流程
 
-<img src="assets/image-20240614124202320.png" alt="image-20240614124202320" style="zoom:80%;" />
+<img src="assets/image-20240614124202320.png" alt="image-20240614124202320" style="zoom: 50%;" />
 
 传统以信任中间人为担保的系统流程
 
-<img src="assets/image-20240614130702856.png" alt="image-20240614130702856" style="zoom:80%;" />
+<img src="assets/image-20240614130702856.png" alt="image-20240614130702856" style="zoom: 50%;" />
 
 以智能合约实现担保流程
 
