@@ -12,12 +12,4 @@ solc_version = "0.8.20"
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
 
-#            "path": "soljson-v0.8.20+commit.a1b79de6.js",
-#            "version": "0.8.20",
-#            "build": "commit.a1b79de6",
-#            "longVersion": "0.8.20+commit.a1b79de6",
-#            "keccak256": "0x3a420fa9963772eee5b9221ebb8cf9548eea8f88b09537390960ea9b440f333c",
-#            "sha256": "0x5c509f760dc110a695c8b39bbc21e08c17dee431aa14d606f59e623d7c3cc657",
-#            "urls": [
-#                "dweb:/ipfs/QmciAxUX2kfuoxitmMdkKSfWn2SfxQdieLRa3S5S2munot"
-#            ]
+#solc_version: https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js
