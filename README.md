@@ -1,6 +1,7 @@
 <div style="display: flex; flex-direction: row;">
     <img src="https://badgen.net/static/license/MIT/green" style="zoom:130%;" />
     <img src="https://img.shields.io/badge/solidity-v0.8.20-red" style="zoom:130%;" />
+    <img src="https://img.shields.io/badge/React-front end-blue" style="zoom:130%;" />
     <img src="https://img.shields.io/badge/last commit-December-orange" style="zoom:130%;" />
 </div>
 
