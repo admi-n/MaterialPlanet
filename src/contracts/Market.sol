@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: S7iter
 pragma solidity 0.8.20;
 
 import "./HashLock.sol";
