@@ -2,23 +2,17 @@
 pragma solidity 0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Counter} from "../src/market.sol";
+import {C2CPlatform} from "../src/market.sol";
 
-contract CounterTest is Test {
-    Counter public counter;
+contract C2CPlatformTest is Test {
+    C2CPlatform public c2cPlatform;
 
     function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
+        c2cPlatform = new C2CPlatform();
     }
 
-    function test_Increment() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
-    }
-
-    function testFuzz_SetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    // 测试功能
+    function testCreateTrade() public {
+        // 测试逻辑
     }
 }
