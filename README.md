@@ -7,7 +7,7 @@
 
 # TPlanet
 
-##### 中文 | [English](https://github.com/admi-n/blob/main/README_EN.md)
+#### 中文 | [English](https://github.com/admi-n/TPlanet/blob/main/README_EN.md)
 
 ## 项目介绍
 
