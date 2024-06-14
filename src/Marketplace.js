@@ -1,6 +1,6 @@
 // src/contracts/Marketplace.js
 import Web3 from 'web3';
-import contractABI from './C2CPlatform.json'; // 导入智能合约 ABI JSON 文件
+import contractABI from './contracts/C2CPlatform.json'; // 导入智能合约 ABI JSON 文件
 
 const web3 = new Web3(Web3.givenProvider);
 const abi = contractABI.abi; // 从 JSON 文件中获取 ABI

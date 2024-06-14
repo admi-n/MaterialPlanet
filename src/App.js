@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Web3 from 'web3';
-import MarketplaceContract from './contracts/Marketplace.js';
+import MarketplaceContract from './Marketplace.js';
 
 const App = () => {
   const [web3, setWeb3] = useState(null);
