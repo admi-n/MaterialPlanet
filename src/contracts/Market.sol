@@ -1,7 +1,9 @@
-// SPDX-License-Identifier: S7iter
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract C2CPlatform {
+import "./HashLock.sol";
+
+contract C2CPlatform is HashLock {
     // 定义买卖双方的状态
     enum TradeStatus { Pending, Locked, Complete, Cancelled }
 
@@ -10,6 +12,8 @@ contract C2CPlatform {
         address payable buyer;
         uint amount;
         TradeStatus status;
+        bytes32 hashLock;
+        uint256 timelock;
     }
 
     // 交易ID到交易详情的映射
@@ -17,23 +21,26 @@ contract C2CPlatform {
     uint public tradeCounter;
 
     // 事件
-    event TradeCreated(uint tradeId, address seller, address buyer, uint amount);
+    event TradeCreated(uint tradeId, address seller, address buyer, uint amount, bytes32 hashLock, uint256 timelock);
     event TradeLocked(uint tradeId);
     event TradeConfirmed(uint tradeId);
     event TradeCancelled(uint tradeId);
 
     // 创建新交易
-    function createTrade(address payable _seller) external payable {
+    function createTrade(address payable _seller, bytes32 _hashLock, uint256 _timelock) external payable {
         require(msg.value > 0, "Amount must be greater than 0");
+        require(_timelock > block.timestamp, "Timelock must be in the future");
 
         trades[tradeCounter] = Trade({
             seller: _seller,
             buyer: payable(msg.sender),
             amount: msg.value,
-            status: TradeStatus.Pending
+            status: TradeStatus.Pending,
+            hashLock: _hashLock,
+            timelock: _timelock
         });
 
-        emit TradeCreated(tradeCounter, _seller, msg.sender, msg.value);
+        emit TradeCreated(tradeCounter, _seller, msg.sender, msg.value, _hashLock, _timelock);
         tradeCounter++;
     }
 
@@ -48,17 +55,18 @@ contract C2CPlatform {
     }
 
     // 买家确认收货
-    function confirmReceipt(uint _tradeId) external {
+    function confirmReceipt(uint _tradeId, bytes32 _preimage) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can confirm receipt");
         require(trade.status == TradeStatus.Locked, "Funds are not locked");
+        require(keccak256(abi.encodePacked(_preimage)) == trade.hashLock, "Invalid preimage");
 
         trade.status = TradeStatus.Complete;
         trade.seller.transfer(trade.amount);
         emit TradeConfirmed(_tradeId);
     }
 
-    // 卖家确认发货（这个功能可以根据需要保留或删除）
+    // 卖家确认发货
     function confirmShipment(uint _tradeId) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.seller, "Only seller can confirm shipment");
@@ -79,4 +87,3 @@ contract C2CPlatform {
         emit TradeCancelled(_tradeId);
     }
 }
-
