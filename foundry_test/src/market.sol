@@ -19,7 +19,7 @@ contract HashLock {
     event Withdrawn(bytes32 indexed lockId, bytes32 preimage);
     event Refunded(bytes32 indexed lockId);
 
-    function lock(bytes32 _hashLock, uint256 _timelock, address payable _receiver) external payable returns (bytes32 lockId) {
+    function createLock(bytes32 _hashLock, uint256 _timelock, address payable _receiver) internal returns (bytes32 lockId) {
         require(msg.value > 0, "Amount must be greater than 0");
         require(_timelock > block.timestamp, "Timelock must be in the future");
 
@@ -40,11 +40,10 @@ contract HashLock {
         emit Locked(lockId, msg.sender, _receiver, msg.value, _hashLock, _timelock);
     }
 
-    function withdraw(bytes32 _lockId, bytes32 _preimage) external {
+    function withdrawLock(bytes32 _lockId, bytes32 _preimage) internal {
         Lock storage lock = locks[_lockId];
 
         require(lock.amount > 0, "Lock does not exist");
-        require(lock.receiver == msg.sender, "Not the receiver");
         require(lock.withdrawn == false, "Already withdrawn");
         require(lock.refunded == false, "Already refunded");
         require(keccak256(abi.encodePacked(_preimage)) == lock.hashLock, "Invalid preimage");
@@ -56,11 +55,10 @@ contract HashLock {
         emit Withdrawn(_lockId, _preimage);
     }
 
-    function refund(bytes32 _lockId) external {
+    function refundLock(bytes32 _lockId) internal {
         Lock storage lock = locks[_lockId];
 
         require(lock.amount > 0, "Lock does not exist");
-        require(lock.sender == msg.sender, "Not the sender");
         require(lock.withdrawn == false, "Already withdrawn");
         require(lock.refunded == false, "Already refunded");
         require(block.timestamp >= lock.timelock, "Timelock not yet passed");
@@ -72,9 +70,7 @@ contract HashLock {
     }
 }
 
-
 contract C2CPlatform is HashLock {
-    // 定义买卖双方的状态
     enum TradeStatus { Pending, Locked, Complete, Cancelled }
 
     struct Trade {
@@ -84,22 +80,22 @@ contract C2CPlatform is HashLock {
         TradeStatus status;
         bytes32 hashLock;
         uint256 timelock;
+        bytes32 lockId;
     }
 
-    // 交易ID到交易详情的映射
     mapping(uint => Trade) public trades;
     uint public tradeCounter;
 
-    // 事件
     event TradeCreated(uint tradeId, address seller, address buyer, uint amount, bytes32 hashLock, uint256 timelock);
     event TradeLocked(uint tradeId);
-    event TradeConfirmed(uint tradeId);
+    event TradeConfirmed(uint tradeId, address confirmer);
     event TradeCancelled(uint tradeId);
 
-    // 创建新交易
     function createTrade(address payable _seller, bytes32 _hashLock, uint256 _timelock) external payable {
         require(msg.value > 0, "Amount must be greater than 0");
         require(_timelock > block.timestamp, "Timelock must be in the future");
+
+        bytes32 lockId = createLock(_hashLock, _timelock, _seller);
 
         trades[tradeCounter] = Trade({
             seller: _seller,
@@ -107,14 +103,14 @@ contract C2CPlatform is HashLock {
             amount: msg.value,
             status: TradeStatus.Pending,
             hashLock: _hashLock,
-            timelock: _timelock
+            timelock: _timelock,
+            lockId: lockId
         });
 
         emit TradeCreated(tradeCounter, _seller, msg.sender, msg.value, _hashLock, _timelock);
         tradeCounter++;
     }
 
-    // 锁定资金
     function lockFunds(uint _tradeId) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can lock funds");
@@ -124,37 +120,35 @@ contract C2CPlatform is HashLock {
         emit TradeLocked(_tradeId);
     }
 
-    // 买家确认收货
     function confirmReceipt(uint _tradeId, bytes32 _preimage) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can confirm receipt");
         require(trade.status == TradeStatus.Locked, "Funds are not locked");
         require(keccak256(abi.encodePacked(_preimage)) == trade.hashLock, "Invalid preimage");
 
+        withdrawLock(trade.lockId, _preimage);
         trade.status = TradeStatus.Complete;
-        trade.seller.transfer(trade.amount);
-        emit TradeConfirmed(_tradeId);
+
+        emit TradeConfirmed(_tradeId, msg.sender);
     }
 
-    // 卖家确认发货
     function confirmShipment(uint _tradeId) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.seller, "Only seller can confirm shipment");
         require(trade.status == TradeStatus.Locked, "Funds are not locked");
 
         trade.status = TradeStatus.Complete;
-        emit TradeConfirmed(_tradeId);
+        emit TradeConfirmed(_tradeId, msg.sender);
     }
 
-    // 取消交易并退还资金
     function cancelTrade(uint _tradeId) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can cancel trade");
         require(trade.status == TradeStatus.Pending, "Cannot cancel non-pending trade");
 
+        refundLock(trade.lockId);
         trade.status = TradeStatus.Cancelled;
-        trade.buyer.transfer(trade.amount);
+
         emit TradeCancelled(_tradeId);
     }
 }
-
