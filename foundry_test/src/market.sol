@@ -23,7 +23,7 @@ contract HashLock {
         require(msg.value > 0, "Amount must be greater than 0");
         require(_timelock > block.timestamp, "Timelock must be in the future");
 
-        lockId = keccak256(abi.encodePacked(msg.sender, _receiver, msg.value, _hashLock, _timelock));
+        lockId = keccak256(abi.encodePacked(msg.sender, _receiver, msg.value, _hashLock, _timelock));   //创建密码
         require(locks[lockId].sender == address(0), "Lock already exists");
 
         locks[lockId] = Lock({
@@ -128,7 +128,7 @@ contract C2CPlatform is HashLock {
     function confirmReceipt(uint _tradeId, bytes32 _preimage) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can confirm receipt");
-        require(trade.status == TradeStatus.Locked, "Funds are not locked");
+        require(trade.status == TradeStatus.Locked, "Funds are not locked");    //
         require(keccak256(abi.encodePacked(_preimage)) == trade.hashLock, "Invalid preimage");
 
         withdrawLock(trade.lockId, _preimage);
