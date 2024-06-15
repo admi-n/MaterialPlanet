@@ -1,68 +1,72 @@
 [
 	{
+		"anonymous": false,
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_tradeId",
-				"type": "uint256"
-			}
-		],
-		"name": "cancelTrade",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "lockId",
+				"type": "bytes32"
+			},
 			{
-				"internalType": "uint256",
-				"name": "_tradeId",
-				"type": "uint256"
-			}
-		],
-		"name": "confirmReceipt",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_tradeId",
-				"type": "uint256"
-			}
-		],
-		"name": "confirmShipment",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "_seller",
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
 				"type": "address"
-			}
-		],
-		"name": "createTrade",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+			},
 			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
-				"name": "_tradeId",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "hashLock",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timelock",
 				"type": "uint256"
 			}
 		],
-		"name": "lockFunds",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "Locked",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "preimage",
+				"type": "bytes32"
+			}
+		],
+		"name": "LogPreimage",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "lockId",
+				"type": "bytes32"
+			}
+		],
+		"name": "Refunded",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -116,6 +120,18 @@
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "hashLock",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timelock",
+				"type": "uint256"
 			}
 		],
 		"name": "TradeCreated",
@@ -133,6 +149,206 @@
 		],
 		"name": "TradeLocked",
 		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "lockId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "preimage",
+				"type": "bytes32"
+			}
+		],
+		"name": "Withdrawn",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tradeId",
+				"type": "uint256"
+			}
+		],
+		"name": "cancelTrade",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tradeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_preimage",
+				"type": "bytes32"
+			}
+		],
+		"name": "confirmReceipt",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tradeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_preimage",
+				"type": "bytes32"
+			}
+		],
+		"name": "confirmShipment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_seller",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_hashLock",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_timelock",
+				"type": "uint256"
+			}
+		],
+		"name": "createTrade",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_hashLock",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_timelock",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_receiver",
+				"type": "address"
+			}
+		],
+		"name": "lock",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "lockId",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tradeId",
+				"type": "uint256"
+			}
+		],
+		"name": "lockFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "locks",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "hashLock",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timelock",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "withdrawn",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "refunded",
+				"type": "bool"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "preimage",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_lockId",
+				"type": "bytes32"
+			}
+		],
+		"name": "refund",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -176,9 +392,37 @@
 				"internalType": "enum C2CPlatform.TradeStatus",
 				"name": "status",
 				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "hashLock",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timelock",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_lockId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_preimage",
+				"type": "bytes32"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

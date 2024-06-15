@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: S7iter
-pragma solidity 0.8.20;
+pragma solidity ^0.8.20;
 
 contract C2CPlatform {
     // 定义买卖双方的状态
