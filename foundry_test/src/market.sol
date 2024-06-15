@@ -70,6 +70,8 @@ contract HashLock {
     }
 }
 
+
+//-------main-------
 contract C2CPlatform is HashLock {
     enum TradeStatus { Pending, Locked, Complete, Cancelled }
 
@@ -91,6 +93,8 @@ contract C2CPlatform is HashLock {
     event TradeConfirmed(uint tradeId, address confirmer);
     event TradeCancelled(uint tradeId);
 
+
+    //创建交易 !!!!!需要测试，存在安全问题
     function createTrade(address payable _seller, bytes32 _hashLock, uint256 _timelock) external payable {
         require(msg.value > 0, "Amount must be greater than 0");
         require(_timelock > block.timestamp, "Timelock must be in the future");
@@ -120,6 +124,7 @@ contract C2CPlatform is HashLock {
         emit TradeLocked(_tradeId);
     }
 
+    //确认收货 !!!需要测试
     function confirmReceipt(uint _tradeId, bytes32 _preimage) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.buyer, "Only buyer can confirm receipt");
