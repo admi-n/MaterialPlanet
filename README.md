@@ -43,7 +43,7 @@
 
 ##### 智能合约架构
 
-C2CPlatform
+C2CPlatform(Main)
 
 <img src="assets/main.png" alt="main"  />
 
@@ -51,7 +51,9 @@ HashLock
 
 <img src="assets/hashlock.png" alt="main" style="zoom: 50%;" />
 
+整体HashLock构架
 
+<img src="assets/detailed_hashlock.png" alt="main" />
 
 ### 与传统担保系统的区别
 
