@@ -43,11 +43,11 @@
 
 ##### 智能合约架构
 
-HashLock
+C2CPlatform
 
 <img src="assets/main.png" alt="main"  />
 
-C2CPlatform
+HashLock
 
 <img src="assets/hashlock.png" alt="main" style="zoom: 50%;" />
 
