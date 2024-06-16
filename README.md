@@ -45,7 +45,7 @@
 
 HashLock
 
-<img src="assets/main.png" alt="main" style="zoom:150%;" />
+<img src="assets/main.png" alt="main"  />
 
 C2CPlatform
 
