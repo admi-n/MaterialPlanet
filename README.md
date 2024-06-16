@@ -25,9 +25,7 @@
 
 #### 平台架构
 
-#### 技术架构
 
-##### 智能合约架构
 
 ```
 前端 (React)                             后端 (Solidity)
@@ -40,6 +38,18 @@
 
 
 
+
+#### 技术架构
+
+##### 智能合约架构
+
+HashLock
+
+<img src="assets/main.png" alt="main" style="zoom:150%;" />
+
+C2CPlatform
+
+<img src="assets/hashlock.png" alt="main" style="zoom: 50%;" />
 
 
 
