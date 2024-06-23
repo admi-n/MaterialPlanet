@@ -4,6 +4,7 @@
     <img src="https://img.shields.io/badge/React-front end-blue" style="zoom:130%;" />
     <img src="https://img.shields.io/badge/last commit-December-orange" style="zoom:130%;" />
 </div>
+//计划添加更新EIP7690 EIP7690
 
 # TPlanet
 
