@@ -142,15 +142,15 @@ contract C2CPlatform is HashLock {
     }
     
     // 卖家确认发货
-    //function confirmShipment(uint _tradeId) external {
-    function confirmShipment(uint _tradeId,bytes32 _preimage) external {
+    function confirmShipment(uint _tradeId) external {
+    //function confirmShipment(uint _tradeId,bytes32 _preimage) external {
         Trade storage trade = trades[_tradeId];
         require(msg.sender == trade.seller, "Only seller can confirm shipment");
         require(trade.status == TradeStatus.Locked, "Funds are not locked");
     
         trade.status = TradeStatus.OrderInProgress;
         emit TradeConfirmed(_tradeId);   //test
-        emit LogPreimage(_preimage); //test
+        //emit LogPreimage(_preimage); //test
     }
 
     // 取消交易并退还资金
